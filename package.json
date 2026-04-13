@@ -1,0 +1,55 @@
+{
+  "name": "ical-ts",
+  "version": "0.1.0",
+  "description": "TypeScript library for generating RFC 5545 compliant iCalendar files with a fluent builder API",
+  "type": "module",
+  "main": "./dist/cjs/index.cjs",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/esm/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/esm/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/index.d.cts",
+        "default": "./dist/cjs/index.cjs"
+      }
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build:esm": "tsc -p tsconfig.build.json",
+    "build:cjs": "tsc -p tsconfig.cjs.json && node scripts/rename-cjs.js",
+    "build": "npm run build:esm && npm run build:cjs",
+    "test": "node --experimental-vm-modules node_modules/.bin/jest",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "ical",
+    "icalendar",
+    "ics",
+    "rfc5545",
+    "calendar",
+    "vevent",
+    "vtodo",
+    "typescript"
+  ],
+  "author": "jmbriccola",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jmbriccola/ical-ts.git"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "@types/node": "^25.6.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.5.0"
+  }
+}
