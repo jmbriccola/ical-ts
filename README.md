@@ -1,4 +1,4 @@
-# ical-ts
+# ical-builder-ts
 
 A TypeScript library for generating RFC 5545 compliant iCalendar (`.ics`) files with a fluent builder API.
 
@@ -12,7 +12,7 @@ A TypeScript library for generating RFC 5545 compliant iCalendar (`.ics`) files 
 ## Installation
 
 ```bash
-npm install ical-ts
+npm install ical-builder-ts
 ```
 
 ## Quick Start
@@ -24,7 +24,7 @@ import {
   AlarmBuilder,
   RRuleBuilder,
   Duration,
-} from 'ical-ts';
+} from 'ical-builder-ts';
 
 const alarm = new AlarmBuilder()
   .display()
@@ -50,7 +50,7 @@ const event = new EventBuilder()
   .build();
 
 const ics = new CalendarBuilder()
-  .prodId('-//MyApp//ical-ts//EN')
+  .prodId('-//MyApp//ical-builder-ts//EN')
   .event(event)
   .autoTimezones()  // auto-adds VTIMEZONE for Europe/Rome
   .build()
@@ -93,7 +93,7 @@ The top-level container. `VERSION` defaults to `2.0`.
 
 ```typescript
 const cal = new CalendarBuilder()
-  .prodId('-//MyApp//ical-ts//EN')  // required
+  .prodId('-//MyApp//ical-builder-ts//EN')  // required
   .method('PUBLISH')
   .calScale('GREGORIAN')
   // RFC 7986 extensions
@@ -229,7 +229,7 @@ The library includes a built-in database of ~80 IANA timezones. You can use them
 **Using the built-in database (recommended):**
 
 ```typescript
-import { Timezone } from 'ical-ts';
+import { Timezone } from 'ical-builder-ts';
 
 // Get a pre-built timezone
 const rome = Timezone.get('Europe/Rome');
@@ -400,7 +400,7 @@ event
 Builders validate required properties and constraints at `.build()` time:
 
 ```typescript
-import { ICalValidationError } from 'ical-ts';
+import { ICalValidationError } from 'ical-builder-ts';
 
 try {
   new EventBuilder().build();  // no DTSTART set

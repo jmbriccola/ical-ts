@@ -1,5 +1,5 @@
 {
-  "name": "ical-ts",
+  "name": "ical-builder-ts",
   "version": "0.1.0",
   "description": "TypeScript library for generating RFC 5545 compliant iCalendar files with a fluent builder API",
   "type": "module",
@@ -42,7 +42,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jmbriccola/ical-ts.git"
+    "url": "git+https://github.com/jmbriccola/ical-builder-ts.git"
   },
   "devDependencies": {
     "@types/jest": "^29.5.14",
