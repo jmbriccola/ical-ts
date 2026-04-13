@@ -13,6 +13,7 @@ import { normalizeDateInput } from '../util/date.js';
 import { requireProperty } from '../util/validation.js';
 import { createCalendar } from '../models/calendar.js';
 import { buildTextParams } from './param-helpers.js';
+import { Timezone } from '../timezones/timezone-database.js';
 
 /**
  * Fluent builder for VCALENDAR objects — the top-level container.
@@ -172,6 +173,61 @@ export class CalendarBuilder {
   /** Add a VTIMEZONE component. Can be called multiple times. */
   timezone(tz: ITimezone): this {
     this._timezones.push(tz);
+    return this;
+  }
+
+  // ──── Auto-timezone ────
+
+  /**
+   * Scan all components for TZID parameters and automatically add the
+   * corresponding VTIMEZONE definitions from the built-in database.
+   *
+   * Skips timezone IDs that are already present or not in the database.
+   *
+   * @example
+   * ```ts
+   * new CalendarBuilder()
+   *   .prodId('-//MyApp//EN')
+   *   .event(eventWithTzidEuropeRome)
+   *   .autoTimezones()  // adds VTIMEZONE for Europe/Rome
+   *   .build();
+   * ```
+   */
+  autoTimezones(): this {
+    const existingIds = new Set(
+      this._timezones.map((tz) =>
+        tz.properties.find((p) => p.name === 'TZID')?.value,
+      ),
+    );
+
+    const referencedIds = new Set<string>();
+
+    const collectTzids = (properties: ReadonlyArray<{ readonly parameters: { readonly [key: string]: string | string[] | undefined } }>) => {
+      for (const prop of properties) {
+        const tzid = prop.parameters['TZID'];
+        if (typeof tzid === 'string' && tzid) {
+          referencedIds.add(tzid);
+        }
+      }
+    };
+
+    for (const event of this._events) {
+      collectTzids(event.properties);
+    }
+    for (const todo of this._todos) {
+      collectTzids(todo.properties);
+    }
+    for (const journal of this._journals) {
+      collectTzids(journal.properties);
+    }
+
+    for (const id of referencedIds) {
+      if (!existingIds.has(id) && Timezone.has(id)) {
+        this._timezones.push(Timezone.get(id));
+        existingIds.add(id);
+      }
+    }
+
     return this;
   }
 

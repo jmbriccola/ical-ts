@@ -1,6 +1,6 @@
 /**
  * Recurring meeting — weekly standup with timezone, alarms, attendees,
- * and a conference link. Demonstrates the most common real-world pattern.
+ * and a conference link. Uses autoTimezones() for automatic VTIMEZONE injection.
  *
  * Run: npx tsx examples/03-recurring-meeting.ts
  */
@@ -9,36 +9,10 @@ import {
   CalendarBuilder,
   EventBuilder,
   AlarmBuilder,
-  TimezoneBuilder,
-  TimezoneRuleBuilder,
   RRuleBuilder,
   Duration,
 } from '../src/index.js';
 
-// ── Europe/Rome timezone definition ──
-const tz = new TimezoneBuilder()
-  .tzId('Europe/Rome')
-  .standard(
-    new TimezoneRuleBuilder('STANDARD')
-      .start({ year: 1970, month: 10, day: 25, hour: 3, minute: 0 })
-      .offsetFrom('+0200')
-      .offsetTo('+0100')
-      .tzName('CET')
-      .rrule(new RRuleBuilder().freq('YEARLY').byMonth(10).byDay('-1SU'))
-      .build(),
-  )
-  .daylight(
-    new TimezoneRuleBuilder('DAYLIGHT')
-      .start({ year: 1970, month: 3, day: 29, hour: 2, minute: 0 })
-      .offsetFrom('+0100')
-      .offsetTo('+0200')
-      .tzName('CEST')
-      .rrule(new RRuleBuilder().freq('YEARLY').byMonth(3).byDay('-1SU'))
-      .build(),
-  )
-  .build();
-
-// ── Recurring standup ──
 const standup = new EventBuilder()
   .summary('Daily Standup')
   .description('Progress, blockers, plans for the day')
@@ -47,7 +21,7 @@ const standup = new EventBuilder()
     { tzid: 'Europe/Rome' },
   )
   .duration(Duration.minutes(15))
-  .location('Sala Dev')
+  .location('Dev Room')
   .status('CONFIRMED')
   .rrule(
     new RRuleBuilder()
@@ -89,8 +63,8 @@ const standup = new EventBuilder()
 
 const cal = new CalendarBuilder()
   .prodId('-//ical-ts//Recurring Meeting Example//EN')
-  .timezone(tz)
   .event(standup)
+  .autoTimezones()  // auto-adds VTIMEZONE for Europe/Rome
   .build();
 
 writeFileSync('examples/03-recurring-meeting.ics', cal.toString());

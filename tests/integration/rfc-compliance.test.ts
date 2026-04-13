@@ -46,9 +46,9 @@ describe('RFC 5545 Compliance', () => {
       .duration(Duration.minutes(30))
       .summary('Team Standup')
       .description('Daily sync meeting\nWith the whole team')
-      .location('Sala Riunioni; Piano 2')
+      .location('Meeting Room; Floor 2')
       .rrule(new RRuleBuilder().freq('WEEKLY').byDay('MO', 'WE', 'FR').count(52))
-      .organizer('boss@example.com', { cn: 'Il Boss' })
+      .organizer('boss@example.com', { cn: 'The Boss' })
       .attendee('dev@example.com', { cn: 'Developer', rsvp: true, role: 'REQ-PARTICIPANT' })
       .status('CONFIRMED')
       .classification('PUBLIC')
@@ -167,7 +167,7 @@ describe('RFC 5545 Compliance', () => {
     // Description has a newline
     expect(output).toContain('Daily sync meeting\\nWith the whole team');
     // Location has a semicolon
-    expect(output).toContain('Sala Riunioni\\; Piano 2');
+    expect(output).toContain('Meeting Room\\; Floor 2');
   });
 
   it('contains recurrence rule', () => {

@@ -34,7 +34,7 @@ import { buildOrganizerParams, buildAttendeeParams, buildTextParams } from './pa
  *   .summary('Team Standup')
  *   .start({ year: 2026, month: 4, day: 13, hour: 9, minute: 0 }, { tzid: 'Europe/Rome' })
  *   .duration(Duration.minutes(30))
- *   .location('Sala Riunioni')
+ *   .location('Meeting Room')
  *   .build()
  * ```
  */

@@ -11,8 +11,8 @@ const event = new EventBuilder()
   .summary('Lunch with Alice')
   .start({ year: 2026, month: 5, day: 10, hour: 12, minute: 30 })
   .end({ year: 2026, month: 5, day: 10, hour: 13, minute: 30 })
-  .location('Trattoria da Mario')
-  .description('Catch up over pasta')
+  .location('The Italian Place')
+  .description('Catch up over lunch')
   .build();
 
 const cal = new CalendarBuilder()

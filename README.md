@@ -52,6 +52,7 @@ const event = new EventBuilder()
 const ics = new CalendarBuilder()
   .prodId('-//MyApp//ical-ts//EN')
   .event(event)
+  .autoTimezones()  // auto-adds VTIMEZONE for Europe/Rome
   .build()
   .toString();
 
@@ -223,6 +224,40 @@ const fb = new FreeBusyBuilder()
 
 ### VTIMEZONE
 
+The library includes a built-in database of ~80 IANA timezones. You can use them directly or build custom definitions.
+
+**Using the built-in database (recommended):**
+
+```typescript
+import { Timezone } from 'ical-ts';
+
+// Get a pre-built timezone
+const rome = Timezone.get('Europe/Rome');
+const nyc = Timezone.get('America/New_York');
+
+// Add to calendar
+new CalendarBuilder()
+  .prodId('-//MyApp//EN')
+  .timezone(rome)
+  .timezone(nyc)
+  .event(event)
+  .build();
+
+// Or auto-detect from events — scans TZID parameters and adds matching VTIMEZONEs
+new CalendarBuilder()
+  .prodId('-//MyApp//EN')
+  .event(eventWithTzidEuropeRome)
+  .event(eventWithTzidAmericaNewYork)
+  .autoTimezones()  // adds both VTIMEZONE automatically
+  .build();
+
+// Check available timezones
+Timezone.has('Europe/Rome');    // true
+Timezone.availableIds();        // ['Africa/Accra', 'Africa/Addis_Ababa', ..., 'UTC']
+```
+
+**Building a custom timezone manually:**
+
 ```typescript
 const standard = new TimezoneRuleBuilder('STANDARD')
   .start({ year: 1970, month: 10, day: 25, hour: 3, minute: 0 })
@@ -340,12 +375,12 @@ Text properties (`summary`, `description`, `location`, `comment`, `contact`) sup
 
 ```typescript
 event
-  .summary('Riunione di team', { language: 'it' })
-  .description('Agenda completa', {
+  .summary('Team Meeting', { language: 'en' })
+  .description('Full agenda', {
     altrep: 'https://example.com/agenda.html',
-    language: 'it',
+    language: 'en',
   })
-  .location('Sala Conferenze', {
+  .location('Conference Room', {
     altrep: 'https://example.com/rooms/conf',
   })
 ```

@@ -13,6 +13,9 @@ export {
 // Value objects
 export { Duration } from './duration/index.js';
 export { RRuleBuilder } from './recurrence/index.js';
+
+// Timezone database
+export { Timezone } from './timezones/index.js';
 export type { ByDayValue } from './recurrence/index.js';
 
 // Model interfaces

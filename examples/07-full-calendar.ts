@@ -1,6 +1,6 @@
 /**
- * Full calendar — combines all component types: timezone, events, todos,
- * journals, and free/busy info. Uses RFC 7986 calendar properties.
+ * Full calendar — combines all component types: events, todos, journals,
+ * and free/busy info. Uses RFC 7986 calendar properties and autoTimezones().
  *
  * Run: npx tsx examples/07-full-calendar.ts
  */
@@ -12,34 +12,9 @@ import {
   JournalBuilder,
   FreeBusyBuilder,
   AlarmBuilder,
-  TimezoneBuilder,
-  TimezoneRuleBuilder,
   RRuleBuilder,
   Duration,
 } from '../src/index.js';
-
-// ── Timezone ──
-const tz = new TimezoneBuilder()
-  .tzId('America/New_York')
-  .standard(
-    new TimezoneRuleBuilder('STANDARD')
-      .start({ year: 1970, month: 11, day: 1, hour: 2, minute: 0 })
-      .offsetFrom('-0400')
-      .offsetTo('-0500')
-      .tzName('EST')
-      .rrule(new RRuleBuilder().freq('YEARLY').byMonth(11).byDay('1SU'))
-      .build(),
-  )
-  .daylight(
-    new TimezoneRuleBuilder('DAYLIGHT')
-      .start({ year: 1970, month: 3, day: 8, hour: 2, minute: 0 })
-      .offsetFrom('-0500')
-      .offsetTo('-0400')
-      .tzName('EDT')
-      .rrule(new RRuleBuilder().freq('YEARLY').byMonth(3).byDay('2SU'))
-      .build(),
-  )
-  .build();
 
 // ── Events ──
 const planning = new EventBuilder()
@@ -112,7 +87,7 @@ const availability = new FreeBusyBuilder()
   .freeBusy('20260506T180000Z/20260506T190000Z', 'BUSY-TENTATIVE')
   .build();
 
-// ── Calendar with RFC 7986 properties ──
+// ── Calendar with RFC 7986 properties + autoTimezones ──
 const cal = new CalendarBuilder()
   .prodId('-//ical-ts//Full Calendar Example//EN')
   .name('Engineering Team')
@@ -121,12 +96,12 @@ const cal = new CalendarBuilder()
   .source('https://example.com/engineering.ics')
   .refreshInterval(Duration.hours(4))
   .method('PUBLISH')
-  .timezone(tz)
   .event(planning)
   .event(demo)
   .todo(bugfix)
   .journal(retro)
   .freeBusy(availability)
+  .autoTimezones()  // auto-adds VTIMEZONE for America/New_York
   .build();
 
 writeFileSync('examples/07-full-calendar.ics', cal.toString());

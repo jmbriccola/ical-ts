@@ -231,26 +231,26 @@ describe('Text property parameters (ALTREP, LANGUAGE)', () => {
 
   it('adds LANGUAGE on description', () => {
     const output = minimalEvent((b) =>
-      b.description('Riunione di team', { language: 'it' }),
+      b.description('Team meeting notes', { language: 'en' }),
     );
-    expect(output).toContain('DESCRIPTION;LANGUAGE=it:Riunione di team');
+    expect(output).toContain('DESCRIPTION;LANGUAGE=en:Team meeting notes');
   });
 
   it('adds both ALTREP and LANGUAGE', () => {
     const output = minimalEvent((b) =>
-      b.location('Sala Conferenze', {
+      b.location('Conference Room', {
         altrep: 'https://example.com/room',
-        language: 'it',
+        language: 'en',
       }),
     );
-    expect(output).toContain('LOCATION;ALTREP="https://example.com/room";LANGUAGE=it:Sala Conferenze');
+    expect(output).toContain('LOCATION;ALTREP="https://example.com/room";LANGUAGE=en:Conference Room');
   });
 
   it('adds LANGUAGE on comment', () => {
     const output = minimalEvent((b) =>
-      b.comment('Ottimo lavoro!', { language: 'it' }),
+      b.comment('Great work!', { language: 'en' }),
     );
-    expect(output).toContain('COMMENT;LANGUAGE=it:Ottimo lavoro!');
+    expect(output).toContain('COMMENT;LANGUAGE=en:Great work!');
   });
 });
 
